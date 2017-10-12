@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+package beget.bereg.v1.administrator;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "bereg/proto/v1/structure.proto";
+
+service AdministratorService {
+    rpc makeChangeOrder(MakeChangeOrderRequest) returns (MakeChangeOrderResponse) {
+        option (google.api.http) = {
+			post: "/v1/bereg/administrator/orders/make"
+			body: "*"
+		};
+    }
+    
+    rpc getChangeOrders(GetChangeOrdersRequest) returns (GetChangeOrdersResponse) {
+        option (google.api.http) = {
+			get: "/v1/bereg/administrator/orders"
+		};
+    }
+    
+    rpc cancelChangeOrder(CancelChangeOrderRequest) returns (CancelChangeOrderResponse) {
+        option (google.api.http) = {
+			patch: "/v1/bereg/administrator/orders/{id}/cancel"
+		};
+    }
+}
+
+message MakeChangeOrderRequest {
+    // Доменные имена, для которых необходимо создать заявки на редактирование персональных данных персоны
+    repeated string fqdn = 1;
+
+    oneof administrator {
+        // Физическое лицо
+        beget.bereg.v1.structure.Administrator.PhysicalPerson physical_person = 2;
+
+        // Юридическое лицо
+        beget.bereg.v1.structure.Administrator.LegalEntity legal_entity = 3;
+    }
+}
+
+message MakeChangeOrderResponse {
+    message Success {
+        // Заявка на смену персональных данных персоны
+        ChangeAdministratorOrder change_administrator_order = 1;
+    }
+    
+    enum Error {
+        // Внутренняя ошибка сервера
+        INTERNAL_ERROR = 0;
+        
+        // Персоны для переданных FQDN различаются между собой
+        DOMAIN_PERSONS_ARE_DIFFERENT = 1;
+    }
+    
+    oneof result {
+        Success success = 1;
+        Error error = 2;
+    }
+}
+
+message GetChangeOrdersRequest {
+    
+}
+
+message GetChangeOrdersResponse {
+    message Success {
+        // Все заявки на смену персональных данных персоны
+        repeated ChangeAdministratorOrder change_administrator_order = 1;
+    }
+
+    enum Error {
+        // Внутренняя ошибка сервера
+        INTERNAL_ERROR = 0;
+    }
+
+    oneof result {
+        Success success = 1;
+        Error error = 2;
+    }
+}
+
+message CancelChangeOrderRequest {
+    // Идентификатор заявки на смену персональных данных персоны
+    uint32 id = 1;
+}
+
+message CancelChangeOrderResponse {
+    message Success {
+        // Заявка на смену персональных данных персоны
+        ChangeAdministratorOrder change_administrator_order = 1;
+    }
+
+    enum Error {
+        // Внутренняя ошибка сервера
+        INTERNAL_ERROR = 0;
+    }
+
+    oneof result {
+        Success success = 1;
+        Error error = 2;
+    }
+}
+
+message ChangeAdministratorOrder {
+    // Номер заявки на смену персональных данных персоны
+    uint32 id = 1;
+    
+    // Доменные имена, для которых создан запрос на смену персональных данных персоны
+    repeated string fqdn = 2;
+
+    // Адрес, по которому доступно заявление, необходимое для подтверждения смены персональных данных персоны
+    string application_form_link = 3;
+
+    // Статус текущей заявки на смену персональных данных персоны
+    oneof status {
+        Pending pending = 4;
+        Declined declined = 5;
+        Approved approved = 6;
+        Canceled canceled = 7;
+        Completed completed = 8;
+    }
+    
+    message Declined {
+        // Причина отказа в изменении персональных данных персоны
+        string decline_reason = 1;
+        
+        // Дата рассмотрения заявки на смену персональных данных персоны
+        google.protobuf.Timestamp examined_at = 2;
+    }
+
+    message Approved {
+        // Дата рассмотрения заявки на смену персональных данных персоны
+        google.protobuf.Timestamp examined_at = 1;
+        
+        // Ссылки на сканы документов, подтверждающих личность персоны
+        repeated string application_link = 2;
+    }
+    
+    message Pending {
+        
+    }
+    
+    message Canceled {
+        
+    }
+    
+    message Completed {
+        
+    }
+    
+    // Дата и время создания заявки на смену персональных данных персоны
+    google.protobuf.Timestamp created_at = 9;
+}
