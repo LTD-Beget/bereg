@@ -1,0 +1,214 @@
+syntax = 'proto3';
+
+package beget.bereg.v1.structure;
+
+message Administrator {
+    oneof administrator {
+        // Физическое лицо
+        PhysicalPerson physical_person = 1;
+
+        // Юридическое лицо
+        LegalEntity legal_entity = 2;
+    }
+    
+    message Contacts {
+        // Почтовый адрес для отправки бумажной корреспонденции
+        // @NotEmpty
+        Address post_address = 1;
+
+        // Почтовый адрес для отправки бумажной корреспонденции на английском языке
+        // @NotEmpty
+        InternationalAddress international_post_address = 2;
+
+        // Телефонные номера для связи
+        // @Amount(min = 1, max = 14)
+        repeated Phone phone = 3;
+
+        // Административный телефон, с возможностью приёма SMS сообщений
+        // Используется для подтверждения процедуры переноса домена
+        // @NotEmpty
+        Phone administrative_phone = 4;
+
+        // E-mail адрес для связи
+        // @Email
+        // @Amount(min = 1, max = 15)
+        repeated string email = 6;
+
+        // E-mail адрес для связи по вопросам трансфера домена от регистратора к регистратору
+        // Используется для подтверждения процедуры переноса домена
+        // @Email
+        string administrative_email = 7;
+    }
+
+    message PhysicalPerson {
+        // Фамилия имя и отчество администратора домена
+        // @Length(max = 255)
+        // @NotEmpty
+        string full_name = 1;
+        
+        // Фамилия имя и отчество администратора домена на английском языке
+        // @Length(max = 255)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-z -.']*$")
+        string international_full_name = 2;
+
+        // Документ, удостоверяющий личность администратора домена
+        IdentityDocument identity_document = 3;
+
+        // Номер налогоплательщика
+        // @Nullable
+        // @Length(max = 27)
+        string taxpayer_number = 4;
+
+        // Дата рождения
+        // @Date("Y-m-d")
+        // @Past
+        string birthday = 5;
+
+        // ISO код страны, резидентом которой является физическое лицо
+        // @Length(min = 2,max = 2)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-Z]{2}$")
+        string resident_country_code = 6;
+        
+        // Контактные данные администратора домена
+        Contacts contacts = 7;
+
+        message IdentityDocument {
+            // Тип документа удостоверяющего личность. Например: паспорт
+            // @Nullable
+            // @Length(max = 10)
+            string type = 1;
+
+            // Идентификатор документа удостоверяющего личность. Например: серия и номер паспорта
+            // @Length(max = 50)
+            // @NotEmpty
+            string identifier = 2;
+
+            // Дата выдачи документа удостоверяющего личность
+            // @Date("Y-m-d")
+            // @Past
+            string issue_date = 3;
+
+            // Дополнительная информация о документе удостоверяющего личность
+            // @Length(max = 185)
+            // @NotEmpty
+            string additional_info = 4;
+        }
+    }
+
+    message LegalEntity {
+        // Название юридического лица
+        // @Length(max = 255)
+        // @NotEmpty
+        string full_name = 1;
+
+        // Название юридического лица на английском языке
+        // @Length(max = 255)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-z -.']*$")
+        string international_full_name = 2;
+
+        // Номер налогоплательщика юридического лица. Например: ИНН
+        // @NotEmpty
+        // @Length(max = 27)
+        string taxpayer_number = 5;
+
+        // Юридический адрес организации
+        // @NotEmpty
+        Address legal_address = 6;
+
+        // ISO код страны, резидентом которой является юридическое лицо
+        // @Length(min = 2,max = 2)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-Z]{2}$")
+        string resident_country_code = 7;
+
+        // Контактные данные администратора домена
+        Contacts contacts = 8;
+    }
+
+    message Phone {
+        // ISO код страны телефона
+        // @Length(min = 2,max = 2)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-Z]{2}$")
+        string country_code = 1;
+
+        // Полный телефонный номер. Необходимо разделить код страны, код оператора и номер пробелами
+        // Например: +7 954 1002010
+        // @NotEmpty
+        string number = 2;
+    }
+
+    message Address {
+        // Почтовый индекс
+        // @NotEmpty
+        // @Length(min = 3, max = 10)
+        string postal_code = 1;
+
+        // ISO код страны
+        // @Length(min = 2,max = 2)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-Z]{2}$")
+        string country_code = 2;
+
+        // Название страны
+        // @NotEmpty
+        // @Length(max = 70)
+        string country_name = 3;
+
+        // Штат, область, край и т.д.
+        // @Nullable
+        // @Length(max = 100)
+        string area = 4;
+
+        // Город, поселение, посёлок и т.д.
+        // @NotEmpty
+        // @Length(max = 100)
+        string locality = 5;
+
+        // Любая дополнительная информация об адресе, в.т.ч. улица, дом, квартира/офис
+        // @NotEmpty
+        // @Length(max = 230)
+        string additional_info = 6;
+    }
+
+    message InternationalAddress {
+        // Почтовый индекс
+        // @NotEmpty
+        // Pattern(regexp = "[1]*$")
+        // @Length(min = 3, max = 10)
+        string postal_code = 1;
+
+        // ISO код страны
+        // @Length(min = 2,max = 2)
+        // @NotEmpty
+        // @Pattern(regexp = "^[A-Z]{2}$")
+        string country_code = 2;
+
+        // Название страны
+        // @NotEmpty
+        // Pattern(regexp = "^[A-z0-9 ,.-]*$")
+        // @Length(max = 70)
+        string country_name = 3;
+
+        // Штат, область, край и т.д.
+        // @Nullable
+        // Pattern(regexp = "^[A-z0-9 ,.-]*$")
+        // @Length(max = 100)
+        string area = 4;
+
+        // Город, поселение, посёлок и т.д.
+        // @NotEmpty
+        // Pattern(regexp = "^[A-z0-9 ,.-]*$")
+        // @Length(max = 100)
+        string locality = 5;
+
+        // Любая дополнительная информация об адресе, в.т.ч. улица, дом, квартира/офис
+        // @NotEmpty
+        // Pattern(regexp = "^[A-z0-9 ,.-]*$")
+        // @Length(max = 230)
+        string additional_info = 6;
+    }
+}
