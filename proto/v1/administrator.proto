@@ -13,16 +13,24 @@ service AdministratorService {
 			body: "*"
 		};
     }
-    
+
     rpc getChangeOrders(GetChangeOrdersRequest) returns (GetChangeOrdersResponse) {
         option (google.api.http) = {
 			get: "/v1/bereg/administrator/orders"
 		};
     }
-    
+
     rpc cancelChangeOrder(CancelChangeOrderRequest) returns (CancelChangeOrderResponse) {
         option (google.api.http) = {
 			patch: "/v1/bereg/administrator/orders/{id}/cancel"
+		};
+    }
+
+    // Создание заявления на безбумажное переоформление доменов
+    rpc createPaperlessOrder (CreatePaperlessOrderRequest) returns (CreatePaperlessOrderResponse) {
+        option (google.api.http) = {
+			post: "/v1/bereg/administrator/paperless"
+			body: "*"
 		};
     }
 }
@@ -152,4 +160,34 @@ message ChangeAdministratorOrder {
     
     // Дата и время создания заявки на смену персональных данных персоны
     google.protobuf.Timestamp created_at = 9;
+}
+
+message CreatePaperlessOrderRequest {
+    string name = 1; // ФИО заявителя
+    string phone = 2; // Номер телефона для отправки SMS
+    string birthday = 3; // YYYY-MM-DD
+    string identity_document_serial = 4; // Серия и номер паспорта
+    map<string, string> identity_document_data = 5; // Когда и кем выдан паспорт
+}
+
+message CreatePaperlessOrderResponse {
+    oneof result {
+        Success success = 1;
+        Error error = 2;
+    }
+
+    message Success {
+        // Номер заявления на безбумажное переоформление
+        uint32 id = 1;
+        // Ссылка для скачивания заявления
+        string application_form_link = 2;
+    }
+
+    message Error {
+        Code code = 1;
+        string message = 2;
+        enum Code {
+            _ = 0;
+        }
+    }
 }
