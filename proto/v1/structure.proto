@@ -126,6 +126,9 @@ message Administrator {
 
         // Контактные данные администратора домена
         Contacts contacts = 8;
+
+        // Номер КПП
+        string kpp_number = 9;
     }
 
     message Phone {
