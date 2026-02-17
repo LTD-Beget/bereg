@@ -36,7 +36,8 @@ service AdministratorService {
 
     rpc examineNormalization(ExamineNormalizationRequest) returns (ExamineNormalizationResponse) {
         option (google.api.http) = {
-            get: "/v1/bereg/administrator/examineNormalization"
+            post: "/v1/bereg/administrator/examineNormalization"
+            body: "*"
         };
     }
 }
