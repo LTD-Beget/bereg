@@ -75,14 +75,15 @@ message Administrator {
             string expiry_date = 7;
 
             enum DocumentType {
+                _ = 0;
                 // паспорт гражданина Российской Федерации
-                RF_PASSPORT = 0;
+                RF_PASSPORT = 1;
                 // удостоверение личности
-                FID_DOC = 1;
+                FID_DOC = 2;
                 // военный билет
-                MLTR_ID = 2;
+                MLTR_ID = 3;
                 // зарубежный паспорт.
-                FRGN_PASS = 3;
+                FRGN_PASS = 4;
             }
         }
 
