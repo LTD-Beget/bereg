@@ -10,7 +10,7 @@ message Administrator {
         // Юридическое лицо
         LegalEntity legal_entity = 2;
     }
-    
+
     message Contacts {
         // Почтовый адрес для отправки бумажной корреспонденции
         // @NotEmpty
@@ -44,13 +44,13 @@ message Administrator {
         // Фамилия имя и отчество администратора домена
         // @Length(max = 255)
         // @NotEmpty
-        string full_name = 1;
-        
+        string full_name = 1 [deprecated = true];
+
         // Фамилия имя и отчество администратора домена на английском языке
         // @Length(max = 255)
         // @NotEmpty
         // @Pattern(regexp = "^[A-z -.']*$")
-        string international_full_name = 2;
+        string international_full_name = 2 [deprecated = true];
 
         // Документ, удостоверяющий личность администратора домена
         IdentityDocument identity_document = 3;
@@ -69,21 +69,27 @@ message Administrator {
         // @Length(min = 2,max = 2)
         // @NotEmpty
         // @Pattern(regexp = "^[A-Z]{2}$")
-        string resident_country_code = 6;
-        
+        string resident_country_code = 6 [deprecated = true];
+
         // Контактные данные администратора домена
-        Contacts contacts = 7;
+        Contacts contacts = 7 [deprecated = true];
+
+        // Структурированное ФИО администратора домена
+        Name person_name = 8;
+
+        // Структурированное ФИО администратора домена на английском языке
+        Name international_person_name = 9;
 
         message IdentityDocument {
             // Тип документа удостоверяющего личность. Например: паспорт
             // @Nullable
             // @Length(max = 10)
-            string type = 1;
+            string type = 1 [deprecated = true];
 
             // Идентификатор документа удостоверяющего личность. Например: серия и номер паспорта
             // @Length(max = 50)
             // @NotEmpty
-            string identifier = 2;
+            string identifier = 2 [deprecated = true];
 
             // Дата выдачи документа удостоверяющего личность
             // @Date("Y-m-d")
@@ -93,7 +99,45 @@ message Administrator {
             // Дополнительная информация о документе удостоверяющего личность
             // @Length(max = 185)
             // @NotEmpty
-            string additional_info = 4;
+            string additional_info = 4 [deprecated = true];
+
+            // Серия документа
+            string series = 5;
+
+            // Номер документа
+            string number = 6;
+
+            // Код подразделения, выпустившего документ
+            string issue_id = 7;
+
+            // Кем выдан документ
+            string issued_by = 8;
+
+            // Срок действия документа
+            string expiry_date = 9;
+
+            // Структурированный тип документа удостоверяющего личность
+            DocumentType document_type = 10;
+
+            enum DocumentType {
+                _ = 0;
+                // паспорт гражданина Российской Федерации
+                RF_PASSPORT = 1;
+                // удостоверение личности
+                FID_DOC = 2;
+                // военный билет
+                MLTR_ID = 3;
+                // зарубежный паспорт
+                FRGN_PASS = 4;
+            }
+        }
+
+        message Name {
+            string first_name = 1;
+
+            string middle_name = 2;
+
+            string last_name = 3;
         }
     }
 
@@ -101,13 +145,13 @@ message Administrator {
         // Название юридического лица
         // @Length(max = 255)
         // @NotEmpty
-        string full_name = 1;
+        string full_name = 1 [deprecated = true];
 
         // Название юридического лица на английском языке
         // @Length(max = 255)
         // @NotEmpty
         // @Pattern(regexp = "^[A-z -.']*$")
-        string international_full_name = 2;
+        string international_full_name = 2 [deprecated = true];
 
         // Номер налогоплательщика юридического лица. Например: ИНН
         // @NotEmpty
@@ -122,7 +166,7 @@ message Administrator {
         // @Length(min = 2,max = 2)
         // @NotEmpty
         // @Pattern(regexp = "^[A-Z]{2}$")
-        string resident_country_code = 7;
+        string resident_country_code = 7 [deprecated = true];
 
         // Контактные данные администратора домена
         Contacts contacts = 8;
@@ -156,7 +200,7 @@ message Administrator {
         // Название страны
         // @NotEmpty
         // @Length(max = 70)
-        string country_name = 3;
+        string country_name = 3 [deprecated = true];
 
         // Штат, область, край и т.д.
         // @Nullable
@@ -166,12 +210,33 @@ message Administrator {
         // Город, поселение, посёлок и т.д.
         // @NotEmpty
         // @Length(max = 100)
-        string locality = 5;
+        string locality = 5 [deprecated = true];
 
         // Любая дополнительная информация об адресе, в.т.ч. улица, дом, квартира/офис
         // @NotEmpty
         // @Length(max = 230)
         string additional_info = 6;
+
+        // Регион
+        string region = 7;
+
+        // Город
+        string city = 8;
+
+        // Улица
+        string street = 9;
+
+        // Дом
+        string house = 10;
+
+        // Здание
+        string building = 11;
+
+        // Корпус
+        string frame = 12;
+
+        // Квартира
+        string flat = 13;
     }
 
     message InternationalAddress {
@@ -191,7 +256,7 @@ message Administrator {
         // @NotEmpty
         // Pattern(regexp = "^[A-z0-9 ,.-]*$")
         // @Length(max = 70)
-        string country_name = 3;
+        string country_name = 3 [deprecated = true];
 
         // Штат, область, край и т.д.
         // @Nullable
@@ -203,12 +268,33 @@ message Administrator {
         // @NotEmpty
         // Pattern(regexp = "^[A-z0-9 ,.-]*$")
         // @Length(max = 100)
-        string locality = 5;
+        string locality = 5 [deprecated = true];
 
         // Любая дополнительная информация об адресе, в.т.ч. улица, дом, квартира/офис
         // @NotEmpty
         // Pattern(regexp = "^[A-z0-9 ,.-]*$")
         // @Length(max = 230)
         string additional_info = 6;
+
+        // Регион
+        string region = 7;
+
+        // Город
+        string city = 8;
+
+        // Улица
+        string street = 9;
+
+        // Дом
+        string house = 10;
+
+        // Здание
+        string building = 11;
+
+        // Корпус
+        string frame = 12;
+
+        // Квартира
+        string flat = 13;
     }
 }

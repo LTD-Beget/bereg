@@ -33,6 +33,13 @@ service AdministratorService {
 			body: "*"
 		};
     }
+
+    rpc examineNormalization(ExamineNormalizationRequest) returns (ExamineNormalizationResponse) {
+        option (google.api.http) = {
+            post: "/v1/bereg/administrator/examineNormalization"
+            body: "*"
+        };
+    }
 }
 
 message MakeChangeOrderRequest {
@@ -188,6 +195,32 @@ message CreatePaperlessOrderResponse {
         string message = 2;
         enum Code {
             _ = 0;
+        }
+    }
+}
+
+message ExamineNormalizationRequest {
+    string hash_code = 1;
+    bool is_correct = 2;
+}
+
+message ExamineNormalizationResponse {
+    oneof result {
+        Success success = 1;
+        Error error = 2;
+    }
+
+    message Success {
+    }
+
+    message Error {
+        string message = 1;
+        ErrorCode code = 2;
+
+        enum ErrorCode {
+            _ = 0;
+            NOT_FOUND = 1;
+            ALREADY_EXAMINED = 2;
         }
     }
 }
