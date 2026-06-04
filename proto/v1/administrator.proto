@@ -40,6 +40,13 @@ service AdministratorService {
             body: "*"
         };
     }
+
+    rpc createEsiaBind(CreateEsiaBindRequest) returns (CreateEsiaBindResponse) {
+        option (google.api.http) = {
+            post: "/v1/bereg/administrator/esia"
+            body: "*"
+        };
+    }
 }
 
 message MakeChangeOrderRequest {
@@ -223,4 +230,12 @@ message ExamineNormalizationResponse {
             ALREADY_EXAMINED = 2;
         }
     }
+}
+
+message CreateEsiaBindRequest {
+    int32 domain_person_id = 1;
+}
+
+message CreateEsiaBindResponse {
+    string token = 1;
 }
