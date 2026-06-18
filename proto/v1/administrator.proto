@@ -237,5 +237,23 @@ message CreateEsiaBindRequest {
 }
 
 message CreateEsiaBindResponse {
-    string token = 1;
+    string token = 1 [deprecated=true];
+    oneof result {
+        Success success = 2;
+        Error error = 3;
+    }
+
+    message Success {
+        string token = 1;
+    }
+
+    message Error {
+        string message = 1;
+        ErrorCode code = 2;
+
+        enum ErrorCode {
+            _ = 0;
+            ACTIVE_BIND_ALREADY_EXISTS = 1;
+        }
+    }
 }
