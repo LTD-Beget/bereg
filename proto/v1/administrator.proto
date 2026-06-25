@@ -53,6 +53,7 @@ message MakeChangeOrderRequest {
     // Доменные имена, для которых необходимо создать заявки на редактирование персональных данных персоны
     repeated string fqdn = 1;
 
+    // Новый администратор, на которого необходимо переоформить домены. Может быть пустым, если смена администратора домена происходит с подтверждением через ЕСИА.
     oneof administrator {
         // Физическое лицо
         beget.bereg.v1.structure.Administrator.PhysicalPerson physical_person = 2;
@@ -66,6 +67,8 @@ message MakeChangeOrderResponse {
     message Success {
         // Заявка на смену персональных данных персоны
         ChangeAdministratorOrder change_administrator_order = 1;
+        // Токен для подтверждения операции через ЕСИА
+        string token = 2;
     }
     
     enum Error {
@@ -137,11 +140,21 @@ message ChangeAdministratorOrder {
 
     // Статус текущей заявки на смену персональных данных персоны
     oneof status {
+        // Ожидает оформления
         Pending pending = 4;
+        // Заявка отклонена
         Declined declined = 5;
         Approved approved = 6;
+        // Заявка отменена
         Canceled canceled = 7;
+        // Заявка выполнена
         Completed completed = 8;
+        // Ожидается подтверждение смены персональных данных персоны новым администратором
+        NEW_ADMIN_PENDING new_admin_pending = 10;
+        // Ожидается подтверждение смены персональных данных персоны текущим администратором
+        CURRENT_ADMIN_PENDING current_admin_pending = 11;
+        // Срок действия заявки на смену персональных данных персоны истек
+        EXPIRED expired = 12;
     }
     
     message Declined {
@@ -171,7 +184,19 @@ message ChangeAdministratorOrder {
     message Completed {
         
     }
-    
+
+    message NEW_ADMIN_PENDING {
+        // Токен для подтверждения операции через ЕСИА
+        string token = 1;
+    }
+
+    message CURRENT_ADMIN_PENDING {
+        // Токен для подтверждения операции через ЕСИА
+        string token = 1;
+    }
+
+    message EXPIRED {
+    }
     // Дата и время создания заявки на смену персональных данных персоны
     google.protobuf.Timestamp created_at = 9;
 }
