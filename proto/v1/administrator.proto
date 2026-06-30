@@ -199,6 +199,15 @@ message ChangeAdministratorOrder {
     }
     // Дата и время создания заявки на смену персональных данных персоны
     google.protobuf.Timestamp created_at = 9;
+
+    // Новый администратор, на которого необходимо переоформить домены. Может быть пустым, если смена администратора домена происходит с подтверждением через ЕСИА.
+    oneof administrator {
+        // Физическое лицо
+        beget.bereg.v1.structure.Administrator.PhysicalPerson physical_person = 13;
+
+        // Юридическое лицо
+        beget.bereg.v1.structure.Administrator.LegalEntity legal_entity = 14;
+    }
 }
 
 message CreatePaperlessOrderRequest {

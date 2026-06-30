@@ -145,13 +145,13 @@ message Administrator {
         // Название юридического лица
         // @Length(max = 255)
         // @NotEmpty
-        string full_name = 1 [deprecated = true];
+        string full_name = 1;
 
         // Название юридического лица на английском языке
         // @Length(max = 255)
         // @NotEmpty
         // @Pattern(regexp = "^[A-z -.']*$")
-        string international_full_name = 2 [deprecated = true];
+        string international_full_name = 2;
 
         // Номер налогоплательщика юридического лица. Например: ИНН
         // @NotEmpty
