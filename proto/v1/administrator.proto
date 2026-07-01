@@ -77,6 +77,9 @@ message MakeChangeOrderResponse {
         
         // Персоны для переданных FQDN различаются между собой
         DOMAIN_PERSONS_ARE_DIFFERENT = 1;
+
+        // Уже есть активная заявка на смену админа
+        ACTIVE_ORDER_ALREADY_EXISTS = 2;
     }
     
     oneof result {
@@ -150,11 +153,11 @@ message ChangeAdministratorOrder {
         // Заявка выполнена
         Completed completed = 8;
         // Ожидается подтверждение смены персональных данных персоны новым администратором
-        NEW_ADMIN_PENDING new_admin_pending = 10;
+        NewAdminPending new_admin_pending = 10;
         // Ожидается подтверждение смены персональных данных персоны текущим администратором
-        CURRENT_ADMIN_PENDING current_admin_pending = 11;
+        CurrentAdminPending current_admin_pending = 11;
         // Срок действия заявки на смену персональных данных персоны истек
-        EXPIRED expired = 12;
+        Expired expired = 12;
     }
     
     message Declined {
@@ -185,17 +188,17 @@ message ChangeAdministratorOrder {
         
     }
 
-    message NEW_ADMIN_PENDING {
+    message NewAdminPending {
         // Токен для подтверждения операции через ЕСИА
         string token = 1;
     }
 
-    message CURRENT_ADMIN_PENDING {
+    message CurrentAdminPending {
         // Токен для подтверждения операции через ЕСИА
         string token = 1;
     }
 
-    message EXPIRED {
+    message Expired {
     }
     // Дата и время создания заявки на смену персональных данных персоны
     google.protobuf.Timestamp created_at = 9;
