@@ -56,6 +56,13 @@ service AdministratorService {
             body: "*"
         };
     }
+
+    // Инициирует подтверждение смены администратора
+    rpc approveChangeOrder(ApproveChangeOrderRequest) returns (ApproveChangeOrderResponse) {
+        option (google.api.http) = {
+            patch: "/v1/bereg/administrator/orders/{id}/approve"
+        };
+    }
 }
 
 message MakeChangeOrderRequest {
@@ -325,5 +332,27 @@ message CorrectionResponse {
         enum ErrorCode {
             _ = 0;
         }
+    }
+}
+
+message ApproveChangeOrderRequest {
+    // Идентификатор заявки на смену персональных данных персоны
+    uint32 id = 1;
+}
+
+message ApproveChangeOrderResponse {
+    message Success {
+        // Заявка на смену персональных данных персоны
+        ChangeAdministratorOrder change_administrator_order = 1;
+    }
+
+    enum Error {
+        // Внутренняя ошибка сервера
+        INTERNAL_ERROR = 0;
+    }
+
+    oneof result {
+        Success success = 1;
+        Error error = 2;
     }
 }
