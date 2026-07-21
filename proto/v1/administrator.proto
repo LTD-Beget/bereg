@@ -89,6 +89,9 @@ message MakeChangeOrderResponse {
 
         // Уже есть активная заявка на смену админа
         ACTIVE_ORDER_ALREADY_EXISTS = 2;
+
+        // Смена администратора была произведена недавно
+        ADMIN_CHANGE_COOLDOWN_ACTIVE = 3;
     }
     
     oneof result {
