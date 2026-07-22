@@ -92,6 +92,9 @@ message MakeChangeOrderResponse {
 
         // Смена администратора была произведена недавно
         ADMIN_CHANGE_COOLDOWN_ACTIVE = 3;
+
+        // Смена администратора была произведена недавно для домена в зоне su
+        ADMIN_CHANGE_COOLDOWN_ACTIVE_FOR_SU = 4;
     }
     
     oneof result {
